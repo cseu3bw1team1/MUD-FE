@@ -1,4 +1,6 @@
 import React from "react";
+import axios from "axios";
+import { withRouter } from 'react-router-dom';
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
@@ -45,10 +47,20 @@ const StyledForm = styled.form`
     }
 `;
 
-const RegisterForm = () => {
+const RegisterForm = ({ history }) => {
+    const RegisterEndpoint = "https://lambda-mud-test.herokuapp.com/api/registration/";
     const { register, handleSubmit, errors } = useForm();
 
-    const onSubmit = data => console.log(data);
+    const onSubmit = data => {
+        axios
+            .post(RegisterEndpoint, data)
+            .then(res => {
+                const { key } = res.data;
+                localStorage.setItem("dungeonKey", key)
+                history.push("/play");
+            })
+            .catch(err => console.log("Error: ", err));
+    };
 
     return (
         <StyledForm onSubmit={handleSubmit(onSubmit)}>
@@ -78,4 +90,4 @@ const RegisterForm = () => {
     );
 };
 
-export default RegisterForm;
+export default withRouter(RegisterForm);
