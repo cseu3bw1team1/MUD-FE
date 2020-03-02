@@ -17,8 +17,9 @@ const StyledCard = styled.div`
 const Content = styled.div`
     display: flex;
     flex-direction: column;
-    border-right: 1px solid ${color.light};
+    padding: 0 70px 0 0;
     width: 300px;
+    border-right: 1px solid ${color.light};
 `;
 
 const Image = styled.img`
