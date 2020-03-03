@@ -8,7 +8,6 @@ import LoginForm from "../components/Form/Login";
 const Login = () => {
     return (
         <Card>
-            go back
             <Title>Dungeon Game</Title>
             <LoginForm />
             New player? <Link to="/register">Register here</Link>

@@ -7,7 +7,6 @@ import RegisterForm from "../components/Form/Register";
 const Register = () => {
     return (
         <Card>
-            go back
             <Title>Dungeon Game</Title>
             <RegisterForm />
         </Card>

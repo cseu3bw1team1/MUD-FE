@@ -5,6 +5,7 @@ import image from "./Graphics.jpg";
 
 const StyledCard = styled.div`
     width: 950px;
+    height: 450px;
     display: flex;
     justify-content: space-between;
     background: ${color.white};
