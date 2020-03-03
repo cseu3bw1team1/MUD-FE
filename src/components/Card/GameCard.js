@@ -5,8 +5,6 @@ import { color } from "../styles";
 const StyledGameCard = styled.div`
     width: 950px;
     height: 450px;
-    display: flex;
-    justify-content: space-between;
     background: ${color.white};
     margin: 100px auto;
     padding: 70px;
