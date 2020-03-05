@@ -1,9 +1,10 @@
 import React from "react";
 import axios from "axios";
-import { withRouter } from 'react-router-dom';
+import { withRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 
+import API from "../../utils/api";
 import { color } from "../styles";
 
 const StyledForm = styled.form`
@@ -48,15 +49,14 @@ const StyledForm = styled.form`
 `;
 
 const RegisterForm = ({ history }) => {
-    const RegisterEndpoint = "http://127.0.0.1:8000/api/registration/";
     const { register, handleSubmit, errors } = useForm();
 
     const onSubmit = data => {
         axios
-            .post(RegisterEndpoint, data)
+            .post(API.BASE_URL + API.REGISTER, data)
             .then(res => {
                 const { key } = res.data;
-                localStorage.setItem("dungeonKey", key)
+                localStorage.setItem("dungeonKey", key);
                 history.push("/play");
             })
             .catch(err => console.log("Error: ", err));
