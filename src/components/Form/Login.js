@@ -48,7 +48,7 @@ const StyledForm = styled.form`
 `;
 
 const LoginForm = ({ history }) => {
-    const LoginEndpoint = "https://lambda-mud-test.herokuapp.com/api/login/";
+    const LoginEndpoint = "http://127.0.0.1:8000/api/login/";
     const { register, handleSubmit, errors } = useForm();
 
     const onSubmit = data => {
