@@ -4,74 +4,8 @@ import styled from "styled-components";
 
 import GameCard from "../components/Card/GameCard";
 
-const sampleMap = [
-    {
-        id: 1,
-        to_n: false,
-        to_e: true,
-        to_s: true,
-        to_w: false,
-        player: true
-    },
-    {
-        id: 2,
-        to_n: false,
-        to_e: false,
-        to_s: false,
-        to_w: true
-    },
-    {
-        id: 3,
-        to_n: false,
-        to_e: false,
-        to_s: true,
-        to_w: false
-    },
-    {
-        id: 4,
-        to_n: true,
-        to_e: true,
-        to_s: false,
-        to_w: false
-    },
-    {
-        id: 5,
-        to_n: false,
-        to_e: true,
-        to_s: true,
-        to_w: true
-    },
-    {
-        id: 6,
-        to_n: true,
-        to_e: false,
-        to_s: false,
-        to_w: true
-    },
-    {
-        id: 7,
-        to_n: false,
-        to_e: true,
-        to_s: false,
-        to_w: false
-    },
-    {
-        id: 8,
-        to_n: true,
-        to_e: true,
-        to_s: false,
-        to_w: true
-    },
-    {
-        id: 9,
-        to_n: false,
-        to_e: false,
-        to_s: false,
-        to_w: true
-    }
-];
-
 const Play = () => {
+
     const InitEndpoint = "http://127.0.0.1:8000/api/adv/init/";
     const MapEndpoint = "http://127.0.0.1:8000/api/adv/map/";
     const [gameData, setGameData] = useState(null);
@@ -96,52 +30,58 @@ const Play = () => {
                 }
             })
             .get(MapEndpoint)
-            .then(res => setMapData(sampleMap))
+            .then(res => {
+                const data = res.data.map;
+                data[0].player = true;
+                setMapData(data);
+            })
             .catch(err => console.log("Error: ", err.message));
     }, []);
 
     const handleMovement = e => {
+        e.preventDefault();
+        let loc = location;
         let tempMap = [...mapData];
 
-        if (e.target.innerText === "Up") {
+        if (e.target.innerText === "Up" || e.key === "ArrowUp") {
             console.log("GOING UP!");
-            if (tempMap[location].to_n) {
-                tempMap[location].player = false;
-                tempMap[location - 3].player = true;
-                setLocation(location - 3);
+            if (tempMap[loc].n_to) {
+                tempMap[loc].player = false;
+                tempMap[loc - 3].player = true;
+                setLocation(loc - 3);
                 setMapData(tempMap);
             } else {
                 console.log("Wall!");
             }
         }
-        if (e.target.innerText === "Right") {
+        if (e.target.innerText === "Right" || e.key === "ArrowRight") {
             console.log("GOING RIGHT!");
-            if (tempMap[location].to_e) {
-                tempMap[location].player = false;
-                tempMap[location + 1].player = true;
-                setLocation(location + 1);
+            if (tempMap[loc].e_to) {
+                tempMap[loc].player = false;
+                tempMap[loc + 1].player = true;
+                setLocation(loc + 1);
                 setMapData(tempMap);
             } else {
                 console.log("Wall!");
             }
         }
-        if (e.target.innerText === "Down") {
+        if (e.target.innerText === "Down" || e.key === "ArrowDown") {
             console.log("GOING DOWN!");
-            if (tempMap[location].to_s) {
-                tempMap[location].player = false;
-                tempMap[location + 3].player = true;
-                setLocation(location + 3);
+            if (tempMap[loc].s_to) {
+                tempMap[loc].player = false;
+                tempMap[loc + 3].player = true;
+                setLocation(loc + 3);
                 setMapData(tempMap);
             } else {
                 console.log("Wall!");
             }
         }
-        if (e.target.innerText === "Left") {
-            if (tempMap[location].to_w) {
+        if (e.target.innerText === "Left" || e.key === "ArrowLeft") {
+            if (tempMap[loc].w_to) {
                 console.log("GOING LEFT!");
-                tempMap[location].player = false;
-                tempMap[location - 1].player = true;
-                setLocation(location - 1);
+                tempMap[loc].player = false;
+                tempMap[loc - 1].player = true;
+                setLocation(loc - 1);
                 setMapData(tempMap);
             } else {
                 console.log("Wall!");
@@ -156,19 +96,17 @@ const Play = () => {
             <button onClick={handleMovement}>Down</button>
             <button onClick={handleMovement}>Left</button>
             <Map>
-                {sampleMap.map((cell, idx) => (
-                    <Row key={idx}>
-                        <Cell
-                            key={cell.id}
-                            top={cell.to_n}
-                            right={cell.to_e}
-                            bottom={cell.to_s}
-                            left={cell.to_w}
-                            player={cell.player}
-                        >
-                            {cell.id}
-                        </Cell>
-                    </Row>
+                {mapData.map((cell, idx) => (
+                    <Cell
+                        key={idx}
+                        top={cell.n_to}
+                        right={cell.e_to}
+                        bottom={cell.s_to}
+                        left={cell.w_to}
+                        player={cell.player}
+                    >
+                        {cell.title}
+                    </Cell>
                 ))}
             </Map>
         </GameCard>
@@ -179,23 +117,22 @@ export default Play;
 
 const Cell = styled.div`
     padding: 10px;
-    ${props =>
-        props.player === true ? "background: #df00ff;" : "background: white;"}
-    border: 1px solid black;
-    ${props =>
-        props.top === false
+    ${({ player }) =>
+        player === true ? "background: #df00ff;" : "background: white;"}
+    ${({ top }) =>
+        top === 0
             ? "border-top: 5px inset blue;"
             : "border-top: 5px solid transparent;"}
-    ${props =>
-        props.right === false
+    ${({ right }) =>
+        right === 0
             ? "border-right: 5px inset blue;"
             : "border-right: 5px solid transparent;"}
-    ${props =>
-        props.bottom === false
+    ${({ bottom }) =>
+        bottom === 0
             ? "border-bottom: 5px inset blue;"
             : "border-bottom: 5px solid transparent;"}
-    ${props =>
-        props.left === false
+    ${({ left }) =>
+        left === 0
             ? "border-left: 5px inset blue;"
             : "border-left: 5px solid transparent;"}
 
@@ -206,10 +143,6 @@ const Cell = styled.div`
     span {
         display: block;
     }
-`;
-
-const Row = styled.div`
-    display: flex;
 `;
 
 const Map = styled.div`
