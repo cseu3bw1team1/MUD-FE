@@ -1,35 +1,22 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { axiosWithAuth } from "../utils/axios.js";
 import styled from "styled-components";
-
+import API from "../utils/api";
 import GameCard from "../components/Card/GameCard";
 
 const Play = () => {
-
-    const InitEndpoint = "http://127.0.0.1:8000/api/adv/init/";
-    const MapEndpoint = "http://127.0.0.1:8000/api/adv/map/";
     const [gameData, setGameData] = useState(null);
     const [mapData, setMapData] = useState([]);
     const [location, setLocation] = useState(0);
 
     useEffect(() => {
-        axios
-            .create({
-                headers: {
-                    Authorization: "Token " + localStorage.getItem("dungeonKey")
-                }
-            })
-            .get(InitEndpoint)
+        axiosWithAuth()
+            .get(API.BASE_URL + API.INIT)
             .then(res => setGameData(res.data))
             .catch(err => console.log("Error: ", err.message));
 
-        axios
-            .create({
-                headers: {
-                    Authorization: "Token " + localStorage.getItem("dungeonKey")
-                }
-            })
-            .get(MapEndpoint)
+        axiosWithAuth()
+            .get(API.BASE_URL + API.MAP)
             .then(res => {
                 const data = res.data.map;
                 data[0].player = true;
